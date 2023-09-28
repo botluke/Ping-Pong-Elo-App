@@ -38,9 +38,10 @@ struct PlayersView: View {
     
     @State private var players = [
         Player(name: "Luke B", elo: 1100),
-        Player(name: "Michael E", elo: 1200),
+        Player(name: "Michael P", elo: 1200),
         Player(name: "Thommy M", elo: 700),
-        Player(name: "Michael P", elo: 1200)
+        Player(name: "Michael E", elo: 1200),
+        Player(name: "Jack B", elo: 1150)
     ]
     private var playersByName: [Player] {
         return players.sorted { $0.name < $1.name }
