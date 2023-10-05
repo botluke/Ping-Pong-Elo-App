@@ -39,9 +39,11 @@ struct PlayersView: View {
     @State private var players = [
         Player(name: "Luke B", elo: 1100),
         Player(name: "Michael P", elo: 1200),
-        Player(name: "Thommy M", elo: 700),
+        Player(name: "Thommy M", elo: 750),
         Player(name: "Michael E", elo: 1200),
-        Player(name: "Jack B", elo: 1150)
+        Player(name: "Jack B", elo: 1150),
+        Player(name: "Purpleish", elo:200),
+        Player(name: "Chrysler", elo:200)
     ]
     private var playersByName: [Player] {
         return players.sorted { $0.name < $1.name }
@@ -55,8 +57,15 @@ struct PlayersView: View {
     
    
     
-    
     var body: some View {
+        Table(players) {
+            TableColumn("Name", value: \.name)
+            TableColumn("Score", value: \.eloString)
+            TableColumn("Win %", value: \.winPercentageString)
+            TableColumn("Wins", value: \.winsString)
+            TableColumn("Losses", value: \.lossesString)
+            TableColumn("Ties", value: \.tiesString)
+        }
         NavigationView {
             VStack {
                     
@@ -154,9 +163,20 @@ struct AddPlayerView: View {
 }
 
 struct Player: Identifiable {
-  let id = UUID()
-  let name: String
-  let elo: Int
+    let id = UUID()
+    var name: String
+    var elo: Int
+    var eloString: String {String(elo)}
+    var wins: Int = 0
+    var winsString: String {String(wins)}
+    var losses: Int = 0
+    var lossesString: String {String(losses)}
+    var ties: Int = 0
+    var tiesString: String {String(ties)}
+    var numberGames: Int {wins+losses+ties}
+    var winPercentage: Double {Double(wins)/Double(numberGames)}
+    var winPercentageString: String {String(winPercentage)}
+    //Ideally get rid of all the _String variables and replace with one universal one
 }
 
 struct ContentView_Previews: PreviewProvider {
