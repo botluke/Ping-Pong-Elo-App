@@ -35,6 +35,13 @@ struct ContentView: View {
 }
 
 struct PlayersView: View {
+    @State private var selectedPlayers = Set<Player.ID>()
+    @State private var sortOrder = [KeyPathComparator(\Player.name),
+                                    KeyPathComparator(\Player.elo),
+                                    KeyPathComparator(\Player.winPercentage),
+                                    KeyPathComparator(\Player.wins),
+                                    KeyPathComparator(\Player.losses),
+                                    KeyPathComparator(\Player.ties)]
     
     @State private var players = [
         Player(name: "Luke B", elo: 1100),
@@ -45,20 +52,11 @@ struct PlayersView: View {
         Player(name: "Purpleish", elo:200),
         Player(name: "Chrysler", elo:200)
     ]
-    private var playersByName: [Player] {
-        return players.sorted { $0.name < $1.name }
-    }
-    
-    private var playersByElo: [Player] {
-        return players.sorted { $0.elo > $1.elo }
-    }
-    @State private var sortByElo = false
-    @State private var showAddPlayer = false
-    
    
     
     var body: some View {
-        Table(players) {
+        
+        Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
             TableColumn("Name", value: \.name)
             TableColumn("Score", value: \.eloString)
             TableColumn("Win %", value: \.winPercentageString)
@@ -66,50 +64,9 @@ struct PlayersView: View {
             TableColumn("Losses", value: \.lossesString)
             TableColumn("Ties", value: \.tiesString)
         }
-        NavigationView {
-            VStack {
-                    
-                List {
-                    ForEach(players) { player in
-                        HStack {
-                            Text(player.name)
-                            Spacer()
-                            Text("\(player.elo)")
-                        }
-                    }
-                }
-                    
-                  }
-            
-            .navigationTitle("Players")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink("Edit", destination: Text("Edit Players"))
-                }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                            Toggle(isOn: $sortByElo) {
-                            Text("Sort by ELO")
-                              }
-                    }
-                  }
-                  .sheet(isPresented: $showAddPlayer) {
-                    AddPlayerView()
-                  }
+        .onChange(of: sortOrder) {
+            players.sort(using: $0)
         }
-        .onAppear {
-              if sortByElo {
-                self.players = playersByElo
-              } else {
-                self.players = playersByName
-              }
-            }
-        .onChange(of: sortByElo) { newValue in
-              if newValue {
-                self.players = playersByElo
-              } else {
-                self.players = playersByName
-              }
-            }
     }
 }
 
