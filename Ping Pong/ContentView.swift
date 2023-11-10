@@ -38,13 +38,13 @@ struct PlayersView: View {
     @State private var selectedPlayers = Set<Player.ID>()
     @State private var sortOrder = [KeyPathComparator(\Player.name),
                                     KeyPathComparator(\Player.elo),
-                                    KeyPathComparator(\Player.winPercentage),
+                                    KeyPathComparator(\Player.winPercent),
                                     KeyPathComparator(\Player.wins),
                                     KeyPathComparator(\Player.losses),
                                     KeyPathComparator(\Player.ties)]
-    
+
     @State private var players = [
-        Player(name: "Luke B", elo: 1100),
+        Player(name: "Luke B", elo: 1100, wins: 2, losses: 1),
         Player(name: "Michael P", elo: 1200),
         Player(name: "Thommy M", elo: 750),
         Player(name: "Michael E", elo: 1200),
@@ -52,20 +52,24 @@ struct PlayersView: View {
         Player(name: "Purpleish", elo:200),
         Player(name: "Chrysler", elo:200)
     ]
-   
-    
+
     var body: some View {
-        
-        Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
-            TableColumn("Name", value: \.name)
-            TableColumn("Score", value: \.eloString)
-            TableColumn("Win %", value: \.winPercentageString)
-            TableColumn("Wins", value: \.winsString)
-            TableColumn("Losses", value: \.lossesString)
-            TableColumn("Ties", value: \.tiesString)
-        }
-        .onChange(of: sortOrder) {
-            players.sort(using: $0)
+        VStack{
+            
+            NavigationLink(destination: AddPlayerView()) {
+                Text("Add Player")
+            }
+            Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
+                TableColumn("Name", value: \.name)
+                TableColumn("Score", value: \.elo.description)
+                TableColumn("Win %", value: \.roundedWinPercentage.description)
+                TableColumn("Wins", value: \.wins.description)
+                TableColumn("Losses", value: \.losses.description)
+                TableColumn("Ties", value: \.ties.description)
+                TableColumn("Games", value: \.numberGames.description)
+            }
+            .onChange(of: sortOrder) {players.sort(using: $0)}
+            .onAppear() {players.sort(using: sortOrder[0])}
         }
     }
 }
@@ -123,17 +127,15 @@ struct Player: Identifiable {
     let id = UUID()
     var name: String
     var elo: Int
-    var eloString: String {String(elo)}
     var wins: Int = 0
-    var winsString: String {String(wins)}
     var losses: Int = 0
-    var lossesString: String {String(losses)}
     var ties: Int = 0
-    var tiesString: String {String(ties)}
     var numberGames: Int {wins+losses+ties}
-    var winPercentage: Double {Double(wins)/Double(numberGames)}
-    var winPercentageString: String {String(winPercentage)}
-    //Ideally get rid of all the _String variables and replace with one universal one
+    var winPercent: Double {Double(wins)/Double(numberGames)}
+    var roundedWinPercentage: Double {
+        if numberGames != 0 {(winPercent*10000).rounded()/100}
+        else {0.0}
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
