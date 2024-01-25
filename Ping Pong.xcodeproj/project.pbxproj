@@ -12,6 +12,7 @@
 		A37CF6612AC4EF4B0023366C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37CF6602AC4EF4B0023366C /* ContentView.swift */; };
 		A37CF6632AC4EF4D0023366C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A37CF6622AC4EF4D0023366C /* Assets.xcassets */; };
 		A37CF6662AC4EF4D0023366C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A37CF6652AC4EF4D0023366C /* Preview Assets.xcassets */; };
+		A3DC898A2B503F7F009DA3F0 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DC89892B503F7F009DA3F0 /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		A37CF6602AC4EF4B0023366C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A37CF6622AC4EF4D0023366C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A37CF6652AC4EF4D0023366C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A3DC89892B503F7F009DA3F0 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 				A37CF65E2AC4EF4B0023366C /* Ping_PongApp.swift */,
 				88F968512AC5C21A0089CA1B /* testfile.swift */,
 				A37CF6602AC4EF4B0023366C /* ContentView.swift */,
+				A3DC89892B503F7F009DA3F0 /* DataManager.swift */,
 				A37CF6622AC4EF4D0023366C /* Assets.xcassets */,
 				A37CF6642AC4EF4D0023366C /* Preview Content */,
 			);
@@ -141,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A37CF6612AC4EF4B0023366C /* ContentView.swift in Sources */,
+				A3DC898A2B503F7F009DA3F0 /* DataManager.swift in Sources */,
 				88F968522AC5C21A0089CA1B /* testfile.swift in Sources */,
 				A37CF65F2AC4EF4B0023366C /* Ping_PongApp.swift in Sources */,
 			);
@@ -277,6 +281,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -306,6 +311,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
