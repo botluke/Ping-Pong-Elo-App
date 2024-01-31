@@ -12,30 +12,33 @@ var players = [Player]()
 
 
 struct ContentView: View {
-
-  @State private var selection = 0
-
-  var body: some View {
-    TabView{
-
-      PlayersView()
-        .tabItem {
-          Image(systemName: "person.3")
-          Text("Players")
+    
+    @State private var selection = 0
+    @State public var players = DataController.shared.loadData()
+    var body: some View {
+        
+        TabView{
+            
+            
+            
+            PlayersView()
+                .tabItem {
+                    Image(systemName: "person.3")
+                    Text("Players")
+                }
+                .tag(0)
+            
+            ResultsView()
+                .tabItem {
+                    Image(systemName: "star.fill")
+                    Text("Results")
+                }
+                .tag(1)
         }
-        .tag(0)
-
-      ResultsView()
-        .tabItem {
-          Image(systemName: "star.fill")
-          Text("Results")
+        .onChange(of: selection) { oldValue, newValue in
+            self.selection = newValue
         }
-        .tag(1)
     }
-    .onChange(of: selection) { newValue in
-      self.selection = newValue
-    }
-  }
 }
 
 struct PlayersView: View {
@@ -46,31 +49,35 @@ struct PlayersView: View {
                                     KeyPathComparator(\Player.wins),
                                     KeyPathComparator(\Player.losses),
                                     KeyPathComparator(\Player.ties)]
-
-    @State public var players = [
-        Player(name: "Luke B", elo: 1100, wins: 2, losses: 1),
-        Player(name: "Michael P", elo: 1200),
-        Player(name: "Thommy M", elo: 750),
-        Player(name: "Michael E", elo: 1200),
-        Player(name: "Jack B", elo: 1150),
-        Player(name: "Purpleish", elo:200),
-        Player(name: "Chrysler", elo:200)
-    ]
-
+    
+    
+    @State var splitVision: NavigationSplitViewVisibility = .all
+    
     var body: some View {
-        VStack{
-            Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
-                TableColumn("Name", value: \.name)
-                TableColumn("Score", value: \.elo.description)
-                TableColumn("Win %", value: \.roundedWinPercentage.description)
-                TableColumn("Wins", value: \.wins.description)
-                TableColumn("Losses", value: \.losses.description)
-                TableColumn("Ties", value: \.ties.description)
-                TableColumn("Games", value: \.numberGames.description)
+        
+        NavigationStack{
+            VStack{
+                NavigationLink(destination: AddPlayerView()) {
+                    Text("Add")
+                }
+                Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
+                    TableColumn("Name", value: \.name)
+                    TableColumn("Score", value: \.elo.description)
+                    TableColumn("Win %", value: \.roundedWinPercentage.description)
+                    TableColumn("Wins", value: \.wins.description)
+                    TableColumn("Losses", value: \.losses.description)
+                    TableColumn("Ties", value: \.ties.description)
+                    TableColumn("Games", value: \.numberGames.description)
+                }
+                
+                .onChange(of: sortOrder) {oldValue, newValue in players.sort(using: sortOrder)}
+                .onAppear() {players.sort(using: sortOrder[0])}
+                .onChange(of: selectedPlayers) {
+                    
+                }
             }
-            .onChange(of: sortOrder) {players.sort(using: $0)}
-            .onAppear() {players.sort(using: sortOrder[0])}
         }
+        
     }
 }
 
@@ -107,36 +114,30 @@ struct ResultsView: View {
 
 
 struct AddPlayerView: View {
-
-  @State private var name = ""
-  @State private var elo = ""
-
-  var body: some View {
-    VStack {
-      TextField("Name", text: $name)
-      TextField("ELO", text: $elo)
-      
-      Button("Save") {
-          DataController.shared.saveData(players)
-      }
+    
+    @State private var nameText = ""
+    @State private var eloText = ""
+    
+    var body: some View {
+        
+        Button("Save") {
+            saveAction()
+        }
+        VStack {
+            Form {
+                TextField("Name", text: $nameText)
+                TextField("ELO", text: $eloText)
+            }.contentMargins(20)
+        }
     }
-  }
+    func saveAction() {
+        players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
+        print(players)
+        DataController.shared.saveData(players)
+    }
+                            
 }
 
-//struct Player: Identifiable {
-//    let id = UUID()
-//    var name: String
-//    var elo: Int
-//    var wins: Int = 0
-//    var losses: Int = 0
-//    var ties: Int = 0
-//    var numberGames: Int {wins+losses+ties}
-//    var winPercent: Double {Double(wins)/Double(numberGames)}
-//    var roundedWinPercentage: Double {
-//        if numberGames != 0 {(winPercent*10000).rounded()/100}
-//        else {0.0}
-//    }
-//}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
