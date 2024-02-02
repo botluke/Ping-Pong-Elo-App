@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-var players = [Player]()
+var players: [Player] = DataController.shared.loadData()
 
 
 struct ContentView: View {
@@ -69,17 +69,17 @@ struct PlayersView: View {
                     TableColumn("Ties", value: \.ties.description)
                     TableColumn("Games", value: \.numberGames.description)
                 }
-                
-                .onChange(of: sortOrder) {oldValue, newValue in players.sort(using: sortOrder)}
+                .onChange(of: sortOrder) {oldValue, newValue in players.sort(using: sortOrder)
+                    selectedPlayers=Set<Player.ID>()
+                }
                 .onAppear() {players.sort(using: sortOrder[0])}
                 .onChange(of: selectedPlayers) {
                     
                 }
             }
+            
         }
-        .navigationDestination(for: Player.self) { player in
-            AddPlayerView()
-        }
+        
         
     }
 }
