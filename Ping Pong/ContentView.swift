@@ -8,12 +8,12 @@
 import SwiftUI
 
 
-var players = [Player]()
+var players: [Player] = DataController.shared.loadData()
 
 
 struct ContentView: View {
     
-    @State private var selection = 0
+    @State private var selection = 1
     @State public var players = DataController.shared.loadData()
     var body: some View {
         
@@ -69,18 +69,16 @@ struct PlayersView: View {
                     TableColumn("Ties", value: \.ties.description)
                     TableColumn("Games", value: \.numberGames.description)
                 }
-                
-                .onChange(of: sortOrder) {oldValue, newValue in players.sort(using: sortOrder)}
+                .onChange(of: sortOrder) {oldValue, newValue in players.sort(using: sortOrder)
+                    selectedPlayers=Set<Player.ID>()
+                }
                 .onAppear() {players.sort(using: sortOrder[0])}
                 .onChange(of: selectedPlayers) {
                     
                 }
             }
+            
         }
-        .navigationDestination(for: Player.self) { player in
-            AddPlayerView()
-        }
-        
     }
 }
 
@@ -135,11 +133,22 @@ struct AddPlayerView: View {
     }
     func saveAction() {
         players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
-        print(players)
         DataController.shared.saveData(players)
     }
                             
 }
+
+struct DetailedPlayerView: View {
+    var player: Player
+    
+    var body: some View {
+        navigationTitle(player.name)
+        Text(player.elo.description)
+    }
+    
+    
+}
+
 
 
 struct ContentView_Previews: PreviewProvider {
