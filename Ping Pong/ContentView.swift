@@ -77,6 +77,9 @@ struct PlayersView: View {
                 }
             }
         }
+        .navigationDestination(for: Player.self) { player in
+            AddPlayerView()
+        }
         
     }
 }
