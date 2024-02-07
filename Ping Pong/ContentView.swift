@@ -85,7 +85,7 @@ struct PlayersView: View {
 }
 
 struct ResultsView: View {
-
+  
   @State private var player1 = ""
   @State private var player2 = ""
   @State private var score1 = ""
@@ -95,12 +95,25 @@ struct ResultsView: View {
       VStack{
           HStack {
               VStack {
-                  TextField("Player 1", text: $player1)
+                  Picker("Select Player 1", selection: $player1) {
+                      ForEach(players) {player in
+                          Text(player.name)
+                      }
+                  }
+                  .pickerStyle(.menu)
+                  Text("Selected player: \(player1)")
+                 // TextField("Player 1", text: $player1)
                   TextField("Score 1", text: $score1)
               }
               
               VStack {
-                  TextField("Player 2", text: $player2)
+                  Picker("Select Player 2", selection: $player2) {
+                      ForEach(players) {players in
+                          Text(players.name)
+                      }
+                  }
+                  .pickerStyle(.menu)
+                  Text("Selected player: \(player2)")
                   TextField("Score 2", text: $score2)
               }
           }
