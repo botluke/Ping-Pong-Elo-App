@@ -86,8 +86,8 @@ struct PlayersView: View {
 
 struct ResultsView: View {
   
-  @State private var player1 = ""
-  @State private var player2 = ""
+  @State private var player1: Player = players[0]
+    @State private var player2: Player = players[1]
   @State private var score1 = ""
   @State private var score2 = ""
 
@@ -96,24 +96,24 @@ struct ResultsView: View {
           HStack {
               VStack {
                   Picker("Select Player 1", selection: $player1) {
-                      ForEach(players) {player in
+                      ForEach(players, id: \.self) {player in
                           Text(player.name)
                       }
                   }
                   .pickerStyle(.menu)
-                  Text("Selected player: \(player1)")
-                 // TextField("Player 1", text: $player1)
+                //Text("Selected player: \(player1.name)")
                   TextField("Score 1", text: $score1)
               }
               
               VStack {
                   Picker("Select Player 2", selection: $player2) {
-                      ForEach(players) {players in
-                          Text(players.name)
+                      ForEach(players, id: \.self) {player in
+                          Text(player.name)
+
                       }
                   }
                   .pickerStyle(.menu)
-                  Text("Selected player: \(player2)")
+                  //Text("Selected player: \(player2.name)")
                   TextField("Score 2", text: $score2)
               }
           }
