@@ -13,7 +13,7 @@ var players: [Player] = DataController.shared.loadData()
 
 struct ContentView: View {
     
-    @State private var selection = 1
+    @State private var selection = 0
     @State public var players = DataController.shared.loadData()
     var body: some View {
         
@@ -79,13 +79,15 @@ struct PlayersView: View {
             }
             
         }
+        
+        
     }
 }
 
 struct ResultsView: View {
-
-  @State private var player1 = ""
-  @State private var player2 = ""
+  
+  @State private var player1: Player = players[0]
+    @State private var player2: Player = players[1]
   @State private var score1 = ""
   @State private var score2 = ""
 
@@ -93,12 +95,25 @@ struct ResultsView: View {
       VStack{
           HStack {
               VStack {
-                  TextField("Player 1", text: $player1)
+                  Picker("Select Player 1", selection: $player1) {
+                      ForEach(players, id: \.self) {player in
+                          Text(player.name)
+                      }
+                  }
+                  .pickerStyle(.menu)
+                //Text("Selected player: \(player1.name)")
                   TextField("Score 1", text: $score1)
               }
               
               VStack {
-                  TextField("Player 2", text: $player2)
+                  Picker("Select Player 2", selection: $player2) {
+                      ForEach(players, id: \.self) {player in
+                          Text(player.name)
+
+                      }
+                  }
+                  .pickerStyle(.menu)
+                  //Text("Selected player: \(player2.name)")
                   TextField("Score 2", text: $score2)
               }
           }
