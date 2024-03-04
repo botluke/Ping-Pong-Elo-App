@@ -7,21 +7,15 @@
 
 import SwiftUI
 
-
 var players: [Player] = DataController.shared.loadData()
 
-
 struct ContentView: View {
-    
     @State private var selection = 0
     @State public var players = DataController.shared.loadData()
+
     var body: some View {
-        
         TabView{
-            
-            
-            
-            PlayersView()
+            PlayersView(players: $players)
                 .tabItem {
                     Image(systemName: "person.3")
                     Text("Players")
@@ -42,6 +36,7 @@ struct ContentView: View {
 }
 
 struct PlayersView: View {
+    @Binding var players: [Player]
     @State private var selectedPlayers = Set<Player.ID>()
     @State private var sortOrder = [KeyPathComparator(\Player.name),
                                     KeyPathComparator(\Player.elo),
@@ -57,7 +52,7 @@ struct PlayersView: View {
         
         NavigationStack{
             VStack{
-                NavigationLink(destination: AddPlayerView()) {
+                NavigationLink(destination: AddPlayerView(players: $players)) {
                     Text("Add")
                 }
                 Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
@@ -82,6 +77,33 @@ struct PlayersView: View {
         
         
     }
+}
+
+struct AddPlayerView: View {
+    
+    @Binding var players: [Player]
+    @State private var nameText = ""
+    @State private var eloText = ""
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        
+        Button("Save") {
+            saveAction()
+            self.presentationMode.wrappedValue.dismiss() // Dismisses the view
+        }
+        VStack {
+            Form {
+                TextField("Name", text: $nameText)
+                TextField("ELO", text: $eloText)
+            }.contentMargins(20)
+        }
+    }
+    func saveAction() {
+        players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
+        DataController.shared.saveData(players)
+    }
+                            
 }
 
 struct ResultsView: View {
@@ -151,29 +173,7 @@ struct ResultsView: View {
 }
 
 
-struct AddPlayerView: View {
-    
-    @State private var nameText = ""
-    @State private var eloText = ""
-    
-    var body: some View {
-        
-        Button("Save") {
-            saveAction()
-        }
-        VStack {
-            Form {
-                TextField("Name", text: $nameText)
-                TextField("ELO", text: $eloText)
-            }.contentMargins(20)
-        }
-    }
-    func saveAction() {
-        players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
-        DataController.shared.saveData(players)
-    }
-                            
-}
+
 
 struct DetailedPlayerView: View {
     var player: Player
