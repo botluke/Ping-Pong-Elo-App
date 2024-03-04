@@ -10,7 +10,7 @@ import Foundation
 struct Player: Codable, Identifiable, Hashable {
     var id = UUID()
     var name: String
-    var elo: Int
+    var elo: Int = 1000
     var wins: Int = 0
     var losses: Int = 0
     var ties: Int = 0
