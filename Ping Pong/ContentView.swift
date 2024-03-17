@@ -12,7 +12,6 @@ var players: [Player] = DataController.shared.loadData()
 struct ContentView: View {
     @State private var selection = 0
     @State public var players = DataController.shared.loadData()
-
     var body: some View {
         TabView{
             PlayersView(players: $players)
@@ -29,18 +28,14 @@ struct ContentView: View {
                 }
                 .tag(1)
         }
-        .onChange(of: selection) { oldValue, newValue in
-            self.selection = newValue
-        }
     }
 }
 
+
 struct PlayersView: View {
     @Binding var players: [Player]
-    @State private var currentSelected: Player = Player(name: "Player")
     @State private var selectedPlayers = Set<Player.ID>()
-    @State private var selectedIndex: Int = 0
-    @State private var path = NavigationPath()
+    @State private var isAddPlayerViewPresented: Bool = false
     @State private var sortOrder = [KeyPathComparator(\Player.name),
                                     KeyPathComparator(\Player.elo),
                                     KeyPathComparator(\Player.winPercent),
@@ -49,59 +44,59 @@ struct PlayersView: View {
                                     KeyPathComparator(\Player.ties)]
     
     
+    @State var splitVision: NavigationSplitViewVisibility = .all
     
     var body: some View {
         
-        NavigationStack(path: $path){
+        NavigationStack{
             VStack{
-                HStack{
-                    Spacer()
-                    NavigationLink(destination: AddPlayerView(players: $players)) {
-                        Text("Add")
-                    }
-                    Spacer()
-                    NavigationLink(destination: DetailedPlayerView(player: $currentSelected)) {
-                        Text("More for \(players[selectedIndex].name)")
-                    }
-                    Spacer()
+                Button("Add Player") {
+                    isAddPlayerViewPresented.toggle()
                 }
-                Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
-                    TableColumn("Name", value: \.name)
-                    TableColumn("Score", value: \.elo.description)
-                    TableColumn("Win %", value: \.roundedWinPercentage.description)
-                    TableColumn("Wins", value: \.wins.description)
-                    TableColumn("Losses", value: \.losses.description)
-                    TableColumn("Ties", value: \.ties.description)
-                    TableColumn("Games", value: \.numberGames.description)
-                }
-                .onChange(of: sortOrder) {oldValue, newValue in players.sort(using: sortOrder)
-                    selectedPlayers=Set<Player.ID>()
-                }
-                .onAppear() {players.sort(using: sortOrder[0])}
-                .onChange(of: selectedPlayers) {
-                    //getting selection
-                    let arrayIndex = self.selectedPlayers
-                    let item = players.filter() { arrayIndex.contains($0.id) }
-                    currentSelected = item.first ?? currentSelected
+                .padding()
+                .popover(isPresented: $isAddPlayerViewPresented) {
+                    AddPlayerView(players: $players)
+                        .frame(minWidth: 600, minHeight: 200)
                     
-                    //getting row in [players] of current selection
-                    var newIndex : Int?
-                    for (index, elem) in players.enumerated() {
-                        if arrayIndex.contains(elem.id) { newIndex = index; break }
-                    }
-                    if((newIndex) != nil) {
-                        selectedIndex=newIndex!
-                    }
                 }
+                Button("Delete Player") {
+                    deleteSelectedPlayers()
+                }
+                .padding()
             }
-            
+            Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
+                TableColumn("Name", value: \.name)
+                TableColumn("Score", value: \.elo.description)
+                TableColumn("Win %", value: \.roundedWinPercentage.description)
+                TableColumn("Wins", value: \.wins.description)
+                TableColumn("Losses", value: \.losses.description)
+                TableColumn("Ties", value: \.ties.description)
+                TableColumn("Games", value: \.numberGames.description)
+            }
+            .onChange(of: sortOrder) {
+                oldValue, newValue in players.sort(using: sortOrder)
+                selectedPlayers=Set<Player.ID>()
+                
+            }
+            .onAppear() {
+                players.sort(using: sortOrder[0])
+            }
+            .onChange(of: selectedPlayers) {
+                
+            }
         }
-        
-        
+    }
+    private func deleteSelectedPlayers() {
+            players.removeAll { player in
+                selectedPlayers.contains(player.id)
+            }
+            selectedPlayers.removeAll()
     }
 }
 
+
 struct AddPlayerView: View {
+    
     
     @Binding var players: [Player]
     @State private var nameText = ""
@@ -127,6 +122,8 @@ struct AddPlayerView: View {
     }
                             
 }
+
+
 
 struct ResultsView: View {
   
@@ -154,10 +151,6 @@ struct ResultsView: View {
                         
                         TextField("Score 1", value: $score1, format: .number).keyboardType(.numberPad)
                             .font(.system(size: 100))
-                
-                            
-                        
-                        
                     }
                     
                     VStack {
@@ -193,20 +186,6 @@ struct ResultsView: View {
         }
     }
 }
-
-
-
-
-struct DetailedPlayerView: View {
-    @Binding var player: Player
-    
-    var body: some View {
-        Text(player.elo.description)
-    }
-    
-    
-}
-
 
 
 struct ContentView_Previews: PreviewProvider {
