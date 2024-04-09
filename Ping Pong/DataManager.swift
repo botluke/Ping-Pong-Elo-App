@@ -20,6 +20,29 @@ struct Player: Codable, Identifiable, Hashable {
         if numberGames != 0 {(winPercent*10000).rounded()/100}
         else {0.0}
     }
+    var gameHistory: [Game] = []
+}
+
+struct Game: Decodable, Encodable, Equatable, Hashable, Identifiable {
+    var id = UUID()
+    var player1: Player
+    var score1: Int
+    var player2: Player
+    var score2: Int
+    var date: Date
+    var elo1: Int
+    var elo2: Int
+}
+extension Game {
+    init(_ firstPlayer: Player, _ firstScore: Int, _ secondPlayer: Player, _ secondScore: Int) {
+        player1 = firstPlayer
+        score1 = firstScore
+        player2 = secondPlayer
+        score2 = secondScore
+        date = Date()
+        elo1 = firstPlayer.elo
+        elo2 = secondPlayer.elo
+    }
 }
 
 class DataController {
@@ -52,6 +75,7 @@ class DataController {
                 print("Error decoding data: \(error.localizedDescription)")
             }
         }
+        //returns an empty array in case no data is stored
         return []
     }
     
