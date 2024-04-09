@@ -21,7 +21,7 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            ResultsView()
+            ResultsView(players: $players)
                 .tabItem {
                     Image(systemName: "star.fill")
                     Text("Results")
