@@ -7,14 +7,15 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 struct PlayersView: View {
-    @Binding var players: [Player]
-    @State private var currentSelected: Player = Player(name: "Player")
+    @Environment(\.modelContext) private var context
+    @Query private var players: [Player]
+    @State private var currentSelected: Player
     @State private var selectedPlayers = Set<Player.ID>()
     @State private var selectedIndex: Int = 0
-    @State private var path = NavigationPath()
-    @State private var isAddPlayerViewPresented: Bool = ContentView().players.count == 0
+    @State private var isAddPlayerViewPresented: Bool = false
     @State private var sortOrder = [KeyPathComparator(\Player.name),
                                     KeyPathComparator(\Player.elo),
                                     KeyPathComparator(\Player.winPercent),
@@ -22,6 +23,19 @@ struct PlayersView: View {
                                     KeyPathComparator(\Player.losses),
                                     KeyPathComparator(\Player.ties)]
     
+    
+    init(selectedIndex: Int = 0, isAddPlayerViewPresented: Bool = false, sortOrder: [KeyPathComparator<Player>] = [KeyPathComparator(\Player.name),
+                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.elo),
+                                                                                                                                                                                                                                                                          //KeyPathComparator(\Player.winPercent),
+                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.wins),
+                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.losses),
+                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.ties)]) {
+        self.currentSelected = Player(name: "Played")
+        self.selectedPlayers = Set<Player.ID>()
+        self.selectedIndex = selectedIndex
+        self.isAddPlayerViewPresented = isAddPlayerViewPresented
+        self.sortOrder = sortOrder
+    }
     
     
     var body: some View {
@@ -37,7 +51,7 @@ struct PlayersView: View {
                         isAddPlayerViewPresented.toggle()
                     }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                         .popover(isPresented: $isAddPlayerViewPresented) {
-                            AddPlayerView(players: $players)
+                            AddPlayerView()
                                 .frame(minWidth: 600, minHeight: 200)
                             
                         }
@@ -49,23 +63,23 @@ struct PlayersView: View {
             }
             Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
                 TableColumn("Name", value: \.name)
-                TableColumn("Score", value: \.elo.description)
-                TableColumn("Win %", value: \.roundedWinPercentage.description)
-                TableColumn("Wins", value: \.wins.description)
-                TableColumn("Losses", value: \.losses.description)
-                TableColumn("Ties", value: \.ties.description)
-                TableColumn("Games", value: \.numberGames.description)
+                TableColumn("Score", value: \.elo!.description)
+                //TableColumn("Win %", value: \.roundedWinPercentage.description)
+                TableColumn("Wins", value: \.wins!.description)
+                TableColumn("Losses", value: \.losses!.description)
+                TableColumn("Ties", value: \.ties!.description)
+                //TableColumn("Games", value: \.numberGames.description)
             }
             .onChange(of: sortOrder) {
-                oldValue, newValue in players.sort(using: sortOrder)
+                //oldValue, newValue in players.sort(using: sortOrder)
                 selectedPlayers=Set<Player.ID>()
-                currentSelected=Player(name: "Player")
+                currentSelected=Player(name: "Played")
                 
             }
             .onAppear() {
-                players.sort(using: sortOrder[0])
+                //players.sort(using: sortOrder[0])
                 selectedPlayers=Set<Player.ID>()
-                currentSelected=Player(name: "Player")
+                currentSelected=Player(name: "Played")
             }
             .onChange(of: selectedPlayers) {
                 //getting selection
@@ -85,20 +99,23 @@ struct PlayersView: View {
         }
     }
     private func deleteSelectedPlayers() {
-        players.removeAll { player in
+        context.delete(players.first(where: {selectedPlayers.contains($0.id)})!)
+        /*
+         players.removeAll { player in
             selectedPlayers.contains(player.id)
         }
+        */
         selectedPlayers.removeAll()
         currentSelected=Player(name: "Player")
-        DataController.shared.saveData(players)
+        //DataController.shared.saveData(players)
     }
 }
 
 
 struct AddPlayerView: View {
     
-    
-    @Binding var players: [Player]
+    @Environment(\.modelContext) private var context
+    //@Query private var players: [Player]
     @State private var nameText = ""
     @State private var eloText = ""
     @Environment(\.presentationMode) var presentationMode
@@ -110,13 +127,16 @@ struct AddPlayerView: View {
             TextField("ELO (Optional)", text: $eloText).keyboardType(.numberPad)
         }.contentMargins(20)
         Button("Save") {
-            saveAction()
+            
+            saveAction(context)
             self.presentationMode.wrappedValue.dismiss() // Dismisses the view
         }.padding()
     }
-    func saveAction() {
-        players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
-        DataController.shared.saveData(players)
+    func saveAction(_ modelContext: ModelContext) {
+        let newPlayer = Player(name: nameText, elo: Int(eloText) ?? 800)
+        context.insert(newPlayer)
+        //players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
+        //DataController.shared.saveData(players)
     }
                             
 }

@@ -7,11 +7,12 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 
 struct ResultsView: View {
     
-    @Binding var players: [Player]
+    @Query private var players: [Player]
     @State private var player1 = Player(name: "Select Player")
     @State private var player2 = Player(name: "Select Player")
     @State private var score1: Int?
@@ -99,7 +100,7 @@ struct ResultsView: View {
                     isAddPlayerViewPresented.toggle()
                 }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                     .popover(isPresented: $isAddPlayerViewPresented) {
-                        AddPlayerView(players: $players)
+                        AddPlayerView()
                             .frame(minWidth: 600, minHeight: 200)
                         
                     }
@@ -111,18 +112,18 @@ struct ResultsView: View {
         let index1 = players.firstIndex(of: player1) ?? -1
         let index2 = players.firstIndex(of: player2) ?? -1
         if (index1 != -1) && (index2 != -1) {
-            players[index1].gameHistory.append(Game(player1, score1!, player2, score2!))
-            players[index2].gameHistory.append(Game(player2, score2!, player1, score1!))
+            players[index1].gameHistory!.append(Game(player1, score1!, player2, score2!))
+            players[index2].gameHistory!.append(Game(player2, score2!, player1, score1!))
             let result = score1!-score2!
             if result > 0 {
-                players[index1].wins += 1
-                players[index2].losses += 1
+                players[index1].wins! += 1
+                players[index2].losses! += 1
             } else if result < 0 {
-                players[index1].losses += 1
-                players[index2].wins += 1
+                players[index1].losses! += 1
+                players[index2].wins! += 1
             } else {
-                players[index1].ties += 1
-                players[index2].ties += 1
+                players[index1].ties! += 1
+                players[index2].ties! += 1
             }
             
             
@@ -132,7 +133,7 @@ struct ResultsView: View {
             
             
             
-            DataController.shared.saveData(players)
+            //DataController.shared.saveData(players)
         } else {
             print("error saving game")
         }
