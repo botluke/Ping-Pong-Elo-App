@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A35995A52BCF2CF1005677FF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35995A42BCF2CF1005677FF /* SettingsView.swift */; };
 		A36D78592BACB6C500ABFEB7 /* DetailedPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D78582BACB6C500ABFEB7 /* DetailedPlayerView.swift */; };
 		A36D785B2BACB93600ABFEB7 /* PlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D785A2BACB93600ABFEB7 /* PlayersView.swift */; };
 		A36D785D2BACBA2B00ABFEB7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D785C2BACBA2B00ABFEB7 /* ResultsView.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A35995A42BCF2CF1005677FF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A36D78582BACB6C500ABFEB7 /* DetailedPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedPlayerView.swift; sourceTree = "<group>"; };
 		A36D785A2BACB93600ABFEB7 /* PlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersView.swift; sourceTree = "<group>"; };
 		A36D785C2BACBA2B00ABFEB7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
@@ -28,6 +30,8 @@
 		A37CF6602AC4EF4B0023366C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A37CF6622AC4EF4D0023366C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A37CF6652AC4EF4D0023366C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A387AB442BCF4CDD00A5CBD9 /* Ping Pong.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ping Pong.entitlements"; sourceTree = "<group>"; };
+		A387AB452BCFF27200A5CBD9 /* Ping-Pong-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Ping-Pong-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A3DC89892B503F7F009DA3F0 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,9 +65,12 @@
 		A37CF65D2AC4EF4B0023366C /* Ping Pong */ = {
 			isa = PBXGroup;
 			children = (
+				A387AB452BCFF27200A5CBD9 /* Ping-Pong-Info.plist */,
+				A387AB442BCF4CDD00A5CBD9 /* Ping Pong.entitlements */,
 				A37CF65E2AC4EF4B0023366C /* Ping_PongApp.swift */,
 				A37CF6602AC4EF4B0023366C /* ContentView.swift */,
 				A36D785C2BACBA2B00ABFEB7 /* ResultsView.swift */,
+				A35995A42BCF2CF1005677FF /* SettingsView.swift */,
 				A36D785A2BACB93600ABFEB7 /* PlayersView.swift */,
 				A36D78582BACB6C500ABFEB7 /* DetailedPlayerView.swift */,
 				A36D785E2BB34DCF00ABFEB7 /* GameView.swift */,
@@ -153,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A37CF6612AC4EF4B0023366C /* ContentView.swift in Sources */,
+				A35995A52BCF2CF1005677FF /* SettingsView.swift in Sources */,
 				A36D785B2BACB93600ABFEB7 /* PlayersView.swift in Sources */,
 				A36D78592BACB6C500ABFEB7 /* DetailedPlayerView.swift in Sources */,
 				A36D785D2BACBA2B00ABFEB7 /* ResultsView.swift in Sources */,
@@ -217,13 +225,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = iPad;
 			};
 			name = Debug;
 		};
@@ -273,12 +282,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = iPad;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -288,12 +298,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Ping Pong/Ping Pong.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Ping Pong/Preview Content\"";
 				DEVELOPMENT_TEAM = GA9826YTZ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Ping-Pong-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Game Tracker";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -308,6 +321,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukeb.Ping-Pong";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -319,12 +336,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Ping Pong/Ping Pong.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Ping Pong/Preview Content\"";
 				DEVELOPMENT_TEAM = GA9826YTZ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Ping-Pong-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Game Tracker";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -339,6 +359,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukeb.Ping-Pong";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

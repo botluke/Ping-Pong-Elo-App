@@ -14,114 +14,57 @@ struct PlayersView: View {
     @Query private var players: [Player]
     @State private var currentSelected: Player
     @State private var selectedPlayers = Set<Player.ID>()
-    @State private var selectedIndex: Int = 0
     @State private var isAddPlayerViewPresented: Bool = false
-    @State private var sortOrder = [KeyPathComparator(\Player.name),
-                                    KeyPathComparator(\Player.elo),
-                                    KeyPathComparator(\Player.winPercent),
-                                    KeyPathComparator(\Player.wins),
-                                    KeyPathComparator(\Player.losses),
-                                    KeyPathComparator(\Player.ties)]
+    @State private var filter = ""
+    @State private var sortOrder: SortOrder
     
     
-    init(selectedIndex: Int = 0, isAddPlayerViewPresented: Bool = false, sortOrder: [KeyPathComparator<Player>] = [KeyPathComparator(\Player.name),
-                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.elo),
-                                                                                                                                                                                                                                                                          //KeyPathComparator(\Player.winPercent),
-                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.wins),
-                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.losses),
-                                                                                                                                                                                                                                                                          KeyPathComparator(\Player.ties)]) {
+    init(sortBy: SortOrder, filterString: String, isAddPlayerViewPresented: Bool = false, sortOrder: SortOrder = SortOrder.name) {
         self.currentSelected = Player(name: "Played")
         self.selectedPlayers = Set<Player.ID>()
-        self.selectedIndex = selectedIndex
         self.isAddPlayerViewPresented = isAddPlayerViewPresented
         self.sortOrder = sortOrder
     }
     
     
     var body: some View {
-        
         NavigationStack{
-            VStack{
-                HStack{
-                    Spacer()
-                    NavigationLink(destination: DetailedPlayerView(player: $currentSelected)) {
-                        Text("More for \(currentSelected.name)")
-                    }
-                    Button("Add Player") {
-                        isAddPlayerViewPresented.toggle()
-                    }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                        .popover(isPresented: $isAddPlayerViewPresented) {
-                            AddPlayerView()
-                                .frame(minWidth: 600, minHeight: 200)
-                            
+            TablePlayersView(sortBy: sortOrder, filterString: filter)
+                .searchable(text: $filter, prompt: Text("Filter by name")).autocorrectionDisabled()
+                .toolbar {
+                    HStack{
+                        Spacer()
+                        Button("Add Player") {
+                            isAddPlayerViewPresented.toggle()
+                        }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+                            .popover(isPresented: $isAddPlayerViewPresented) {
+                                AddPlayerView()
+                                    .frame(minWidth: 600, minHeight: 200)
+                                
+                            }
+                        
+                        Picker("", selection: $sortOrder) {
+                            ForEach(SortOrder.allCases) { sortOrder in
+                                Text("Sort by \(sortOrder.rawValue)").tag(sortOrder)
+                            }
                         }
-                    Button("Delete Player") {
-                        deleteSelectedPlayers()
+                        .buttonStyle(.bordered)
+                        Spacer()
                     }
-                    Spacer()
                 }
-            }
-            Table(players, selection: $selectedPlayers, sortOrder: $sortOrder) {
-                TableColumn("Name", value: \.name)
-                TableColumn("Score", value: \.elo!.description)
-                //TableColumn("Win %", value: \.roundedWinPercentage.description)
-                TableColumn("Wins", value: \.wins!.description)
-                TableColumn("Losses", value: \.losses!.description)
-                TableColumn("Ties", value: \.ties!.description)
-                //TableColumn("Games", value: \.numberGames.description)
-            }
-            .onChange(of: sortOrder) {
-                //oldValue, newValue in players.sort(using: sortOrder)
-                selectedPlayers=Set<Player.ID>()
-                currentSelected=Player(name: "Played")
-                
-            }
-            .onAppear() {
-                //players.sort(using: sortOrder[0])
-                selectedPlayers=Set<Player.ID>()
-                currentSelected=Player(name: "Played")
-            }
-            .onChange(of: selectedPlayers) {
-                //getting selection
-                let arrayIndex = self.selectedPlayers
-                let item = players.filter() { arrayIndex.contains($0.id) }
-                currentSelected = item.first ?? currentSelected
-                
-                //getting row in [players] of current selection
-                var newIndex : Int?
-                for (index, elem) in players.enumerated() {
-                    if arrayIndex.contains(elem.id) { newIndex = index; break }
-                }
-                if((newIndex) != nil) {
-                    selectedIndex=newIndex!
-                }
-            }
         }
     }
-    private func deleteSelectedPlayers() {
-        context.delete(players.first(where: {selectedPlayers.contains($0.id)})!)
-        /*
-         players.removeAll { player in
-            selectedPlayers.contains(player.id)
-        }
-        */
-        selectedPlayers.removeAll()
-        currentSelected=Player(name: "Player")
-        //DataController.shared.saveData(players)
-    }
+    
 }
 
 
 struct AddPlayerView: View {
-    
     @Environment(\.modelContext) private var context
-    //@Query private var players: [Player]
     @State private var nameText = ""
     @State private var eloText = ""
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        
         Form {
             TextField("Name", text: $nameText).autocorrectionDisabled(true)
             TextField("ELO (Optional)", text: $eloText).keyboardType(.numberPad)
@@ -135,8 +78,80 @@ struct AddPlayerView: View {
     func saveAction(_ modelContext: ModelContext) {
         let newPlayer = Player(name: nameText, elo: Int(eloText) ?? 800)
         context.insert(newPlayer)
-        //players.append(Player(name:nameText, elo:Int(eloText) ?? 800))
-        //DataController.shared.saveData(players)
     }
                             
+}
+
+
+
+struct TablePlayersView: View {
+    @Environment(\.modelContext) private var context
+    @Query private var players: [Player]
+    @State private var selectedPlayers = Set<Player.ID>()
+    @State private var sortBy: SortOrder
+    @State private var currentSelected: Player
+    
+    init(sortBy: SortOrder, filterString: String){
+        let sortDescriptors: [SortDescriptor<Player>] = switch sortBy {
+        case .name: [SortDescriptor(\Player.name)]
+        case .elo: [SortDescriptor(\Player.elo)]
+        case .wins: [SortDescriptor(\Player.wins)]
+        case .losses: [SortDescriptor(\Player.losses)]
+        case .ties: [SortDescriptor(\Player.ties)]
+        }
+        let predicate = #Predicate<Player> { player in
+            player.name.localizedStandardContains(filterString)
+            || player.name.localizedStandardContains(filterString)
+            || filterString.isEmpty
+        }
+        
+        self.sortBy = sortBy
+        self.currentSelected = Player(name: "Player")
+        _players = Query(filter: predicate, sort: sortDescriptors, animation: .bouncy)
+    }
+    
+    
+    var body: some View {
+        Table(players, selection: $selectedPlayers) {
+            TableColumn("Name", value: \.name)
+            TableColumn("Score", value: \.elo.description)
+            TableColumn("Win %", value: \.roundedWinPercentage.description)
+            TableColumn("Wins", value: \.wins.description)
+            TableColumn("Losses", value: \.losses.description)
+            TableColumn("Ties", value: \.ties.description)
+            TableColumn("Games", value: \.numberGames.description)
+        }
+        .onAppear() {
+            selectedPlayers=Set<Player.ID>()
+            currentSelected=Player(name: "Player")
+        }
+        .onChange(of: selectedPlayers) {
+            let arrayIndex = self.selectedPlayers
+            let item = players.filter() { arrayIndex.contains($0.id) }
+            currentSelected = item.first ?? currentSelected
+        }
+        .toolbar{
+            Button("Delete Player") {
+                deleteSelectedPlayers()
+            }
+            NavigationLink(destination: DetailedPlayerView(player: $currentSelected)) {
+                Text("More for \(currentSelected.firstName)").frame(width:150)
+            }
+        }
+        
+    }
+    private func deleteSelectedPlayers() {
+        if (players.first(where: {selectedPlayers.contains($0.id)}) != nil) {
+            context.delete(players.first(where: {selectedPlayers.contains($0.id)})!)
+            selectedPlayers.removeAll()
+            currentSelected=Player(name: "Player")
+        } else {return}
+    }
+}
+
+enum SortOrder: String, Identifiable, CaseIterable {
+    case name, elo, wins, losses, ties
+    var id: Self {
+        self
+    }
 }

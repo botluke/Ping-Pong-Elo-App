@@ -39,7 +39,7 @@ struct ResultsView: View {
                         VStack {
                             Picker("Select Player 1", selection: $player1) {
                                 ForEach(players, id: \.self) {player in
-                                    Text(player.name)
+                                    Text(player.firstName)
                                         .tag(player)
                                         .font(.system(size: 69))
                                 }
@@ -56,7 +56,7 @@ struct ResultsView: View {
                         VStack {
                             Picker("Select Player 2", selection: $player2) {
                                 ForEach(players, id: \.self) {player in
-                                    Text(player.name)
+                                    Text(player.firstName)
                                         .tag(player)
                                         .font(.system(size: 69))
                                     
@@ -112,28 +112,24 @@ struct ResultsView: View {
         let index1 = players.firstIndex(of: player1) ?? -1
         let index2 = players.firstIndex(of: player2) ?? -1
         if (index1 != -1) && (index2 != -1) {
-            players[index1].gameHistory!.append(Game(player1, score1!, player2, score2!))
-            players[index2].gameHistory!.append(Game(player2, score2!, player1, score1!))
+            players[index1].gameHistory.append(Game(player1, score1!, player2, score2!))
+            players[index2].gameHistory.append(Game(player2, score2!, player1, score1!))
             let result = score1!-score2!
             if result > 0 {
-                players[index1].wins! += 1
-                players[index2].losses! += 1
+                players[index1].wins += 1
+                players[index2].losses += 1
             } else if result < 0 {
-                players[index1].losses! += 1
-                players[index2].wins! += 1
+                players[index1].losses += 1
+                players[index2].wins += 1
             } else {
-                players[index1].ties! += 1
-                players[index2].ties! += 1
+                players[index1].ties += 1
+                players[index2].ties += 1
             }
-            
             
             
             //Add elo function to update elos of player1 and player2
             //use players[index1] to reference player1, so the players array gets updated properly
             
-            
-            
-            //DataController.shared.saveData(players)
         } else {
             print("error saving game")
         }
