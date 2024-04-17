@@ -16,8 +16,8 @@ struct DetailedPlayerView: View {
     var body: some View {
         VStack{
             Chart {
-                ForEach(player.gameHistory!, id: \.id) { game in
-                    LineMark(x: PlottableValue.value("Date", game.date!.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))), y: PlottableValue.value("elo1", game.elo1!), series: .value("Date", "elo"))
+                ForEach(player.gameHistory, id: \.id) { game in
+                    LineMark(x: PlottableValue.value("Date", game.date.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))), y: PlottableValue.value("elo1", game.elo1), series: .value("Date", "elo"))
                 }
                 .foregroundStyle(Color.blue)
                 .interpolationMethod(.linear)
@@ -25,11 +25,11 @@ struct DetailedPlayerView: View {
             }
             .frame(minWidth: 200, idealWidth: 400, maxWidth: 600, minHeight: 300, idealHeight: 420, maxHeight: 700, alignment: .center)
             
-            List(player.gameHistory!) { game in
+            List(player.gameHistory) { game in
                 NavigationLink{
                     GameView(game: game)
                 } label: {
-                    Text("\(game.date!.formatted(date: .numeric, time: .omitted)) vs \(game.player2)")
+                    Text("\(game.date.formatted(date: .numeric, time: .omitted)) vs \(game.player2)")
                 }
             }
             

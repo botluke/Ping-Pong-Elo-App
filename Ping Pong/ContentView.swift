@@ -8,17 +8,13 @@
 import SwiftUI
 import SwiftData
 
-//var players: [Player] = DataController.shared.loadData()
 
 struct ContentView: View {
     @State private var selection = 0
-    //@State public var players = DataController.shared.loadData()
-
-    //@Environment(\.modelContext) public var context
     
     var body: some View {
         TabView{
-            PlayersView()
+            PlayersView(sortBy: .name, filterString: "")
                 .tabItem {
                     Image(systemName: "person.3")
                     Text("Players")
@@ -31,6 +27,14 @@ struct ContentView: View {
                     Text("Results")
                 }
                 .tag(1)
+            
+            SettingsView()
+                .tabItem {
+                    Image(systemName: "gear")
+                    Text("Settings")
+                }
+                .tag(2)
+            
         }
     }
 }
@@ -44,6 +48,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .modelContainer(for: Player.self, inMemory: true)
+            .modelContainer(for: Player.self)
     }
 }
