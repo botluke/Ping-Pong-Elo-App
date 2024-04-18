@@ -18,6 +18,10 @@ struct ResultsView: View {
     @State private var score1: Int?
     @State private var score2: Int?
     @State private var isAddPlayerViewPresented = false
+    @State private var filter = ""
+    @State private var search1: String = ""
+    @State private var search2: String = ""
+    @State private var showAlert = false
     
     
     private func setDefaultPlayers() {
@@ -26,58 +30,48 @@ struct ResultsView: View {
             player2 = players[1]
         }
     }
-
+    
     
     var body: some View {
         if players.count >= 2 {
             ZStack{
                 RoundedRectangle(cornerRadius: 0)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 VStack{
                     HStack {
                         Spacer()
                         VStack {
-                            Picker("Select Player 1", selection: $player1) {
-                                ForEach(players, id: \.self) {player in
-                                    Text(player.name)
-                                        .tag(player)
-                                        .font(.system(size: 69))
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .controlSize(.small)
+                            
+                            SearchablePicker(selection: $player1, options: players, searchText: $search1, placeholder: "Search")
+                            Text("Selected Player: \(player1.name)")
+                                .font(.system(size: 16))
                             
                             TextField("Score 1", value: $score1, format: .number).keyboardType(.numberPad)
-                                .font(.system(size: 69))
+                                .font(.system(size: 42))
                                 .keyboardType(.numberPad)
                                 .autocorrectionDisabled()
+                                .background(Color(.systemGray6))
+                                .containerShape(RoundedRectangle(cornerRadius: 42))
                         }
                         Spacer()
                         VStack {
-                            Picker("Select Player 2", selection: $player2) {
-                                ForEach(players, id: \.self) {player in
-                                    Text(player.name)
-                                        .tag(player)
-                                        .font(.system(size: 69))
-                                    
-                                }
-                                
-                            }
-                            .controlSize(.extraLarge)
-                            .pickerStyle(.menu)
-                            .font(.system(size:69))
+                            SearchablePicker(selection: $player2, options: players, searchText: $search2, placeholder: "Search")
+                            Text("Selected Player: \(player2.name)")
+                                .font(.system(size: 16))
                             
                             TextField("Score 2", value: $score2, format: .number)
-                                .font(.system(size: 69))
+                                .font(.system(size: 42))
                                 .keyboardType(.numberPad)
                                 .autocorrectionDisabled()
+                                .background(Color(.systemGray6))
+                                .containerShape(RoundedRectangle(cornerRadius: 42))
                             
                         }
                         Spacer()
                     }
                     Button(action: {saveGame()},label: {
                         Text("SUBMIT")
-                            .font(Font.system(size:50, design: .monospaced))
+                            .font(Font.system(size:42, design: .monospaced))
                             .padding(.horizontal, 2)
                             .frame(width: 275,height: 90)
                             .foregroundColor(.blue.opacity(1))
@@ -92,6 +86,13 @@ struct ResultsView: View {
                 setDefaultPlayers()
             }
             .frame(minWidth: 350, idealWidth: 420, maxWidth: 600, minHeight: 100, idealHeight: 150, maxHeight: 250)
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("So silly!").font(.system(size: 32)),
+                    message: Text("You can't play against yourself").font(.system(size: 24)),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         else {
             VStack{
@@ -111,27 +112,31 @@ struct ResultsView: View {
     func saveGame() {
         let index1 = players.firstIndex(of: player1) ?? -1
         let index2 = players.firstIndex(of: player2) ?? -1
-        if (index1 != -1) && (index2 != -1) && (score1 != nil) && (score2 != nil){
-            players[index1].gameHistory.append(Game(player1, score1!, player2, score2!))
-            players[index2].gameHistory.append(Game(player2, score2!, player1, score1!))
-            let result = score1!-score2!
-            if result > 0 {
-                players[index1].wins += 1
-                players[index2].losses += 1
-            } else if result < 0 {
-                players[index1].losses += 1
-                players[index2].wins += 1
+        if index1 != index2 {
+            if (index1 != -1) && (index2 != -1) && (score1 != nil) && (score2 != nil){
+                players[index1].gameHistory.append(Game(player1, score1!, player2, score2!))
+                players[index2].gameHistory.append(Game(player2, score2!, player1, score1!))
+                let result = score1!-score2!
+                if result > 0 {
+                    players[index1].wins += 1
+                    players[index2].losses += 1
+                } else if result < 0 {
+                    players[index1].losses += 1
+                    players[index2].wins += 1
+                } else {
+                    players[index1].ties += 1
+                    players[index2].ties += 1
+                }
+                
+                
+                //Add elo function to update elos of player1 and player2
+                //use players[index1] to reference player1, so the players array gets updated properly
+                
             } else {
-                players[index1].ties += 1
-                players[index2].ties += 1
+                print("error saving game")
             }
-            
-            
-            //Add elo function to update elos of player1 and player2
-            //use players[index1] to reference player1, so the players array gets updated properly
-            
         } else {
-            print("error saving game")
+            showAlert = true
         }
         
         score1 = nil
@@ -139,4 +144,3 @@ struct ResultsView: View {
         
     }
 }
-

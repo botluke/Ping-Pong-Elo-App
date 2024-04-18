@@ -30,7 +30,7 @@ struct PlayersView: View {
     var body: some View {
         NavigationStack{
             TablePlayersView(sortBy: sortOrder, filterString: filter)
-                .searchable(text: $filter, prompt: Text("Filter by name")).autocorrectionDisabled()
+                .searchable(text: $filter, placement: .navigationBarDrawer, prompt: Text("Filter by name")).autocorrectionDisabled()
                 .toolbar {
                     HStack{
                         Spacer()

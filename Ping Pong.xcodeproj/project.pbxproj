@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A30695D12BD1CCD400404BA5 /* SearchablePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30695D02BD1CCD400404BA5 /* SearchablePicker.swift */; };
 		A35995A52BCF2CF1005677FF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35995A42BCF2CF1005677FF /* SettingsView.swift */; };
 		A36D78592BACB6C500ABFEB7 /* DetailedPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D78582BACB6C500ABFEB7 /* DetailedPlayerView.swift */; };
 		A36D785B2BACB93600ABFEB7 /* PlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D785A2BACB93600ABFEB7 /* PlayersView.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A30695D02BD1CCD400404BA5 /* SearchablePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchablePicker.swift; sourceTree = "<group>"; };
 		A35995A42BCF2CF1005677FF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A36D78582BACB6C500ABFEB7 /* DetailedPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedPlayerView.swift; sourceTree = "<group>"; };
 		A36D785A2BACB93600ABFEB7 /* PlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersView.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				A387AB452BCFF27200A5CBD9 /* Ping-Pong-Info.plist */,
 				A387AB442BCF4CDD00A5CBD9 /* Ping Pong.entitlements */,
 				A37CF65E2AC4EF4B0023366C /* Ping_PongApp.swift */,
+				A30695D02BD1CCD400404BA5 /* SearchablePicker.swift */,
 				A37CF6602AC4EF4B0023366C /* ContentView.swift */,
 				A36D785C2BACBA2B00ABFEB7 /* ResultsView.swift */,
 				A35995A42BCF2CF1005677FF /* SettingsView.swift */,
@@ -162,6 +165,7 @@
 				A37CF6612AC4EF4B0023366C /* ContentView.swift in Sources */,
 				A35995A52BCF2CF1005677FF /* SettingsView.swift in Sources */,
 				A36D785B2BACB93600ABFEB7 /* PlayersView.swift in Sources */,
+				A30695D12BD1CCD400404BA5 /* SearchablePicker.swift in Sources */,
 				A36D78592BACB6C500ABFEB7 /* DetailedPlayerView.swift in Sources */,
 				A36D785D2BACBA2B00ABFEB7 /* ResultsView.swift in Sources */,
 				A3DC898A2B503F7F009DA3F0 /* DataManager.swift in Sources */,
@@ -307,6 +311,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Ping-Pong-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Game Tracker";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -345,6 +350,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Ping-Pong-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Game Tracker";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
